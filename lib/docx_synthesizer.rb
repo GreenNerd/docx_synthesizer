@@ -1,5 +1,12 @@
-require "docx_synthesizer/version"
+require 'nokogiri'
+require 'zip'
+
+require 'docx_synthesizer/version'
+
+require 'docx_synthesizer/template'
 
 module DocxSynthesizer
-  # Your code goes here...
+  def self.template(path)
+    Template.new(path)
+  end
 end
