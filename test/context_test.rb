@@ -5,7 +5,7 @@ class DocxSynthesizerTest < Minitest::Test
     data = {
       field_1: 1,
       field_2: 'B',
-      field_3: [3, 'C'],
+      field_3: [3, 'C']
     }
 
     context = DocxSynthesizer::Context.new(data)
