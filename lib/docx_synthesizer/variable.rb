@@ -1,9 +1,15 @@
 module DocxSynthesizer
   class Variable
+    NAME_REGEX = /{{\s*(?<variable_name>[\w_]+)\s*}}/
+
     attr_reader :value
 
     def initialize(value)
       @value = value
+    end
+
+    def process(node_template)
+      node_template.dup.tap { |obj| obj.content = value}
     end
   end
 end
