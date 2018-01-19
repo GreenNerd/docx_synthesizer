@@ -1,6 +1,6 @@
 module DocxSynthesizer
   class Fragment
-    DEFAULT_SPACER = ' '.freeze
+    DEFAULT_SPACER = "、".freeze
     attr_reader :context
 
     def initialize(context)
