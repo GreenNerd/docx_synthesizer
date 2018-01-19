@@ -1,5 +1,6 @@
 module DocxSynthesizer
   class Fragment
+    DEFAULT_SPACER = ' '.freeze
     attr_reader :context
 
     def initialize(context)
@@ -37,7 +38,8 @@ module DocxSynthesizer
       if variable = context[md[:variable_name]]
         case variable
         when Array
-          variable.map { |v| v.process(@wt_template) }
+          nodes = variable.map { |v| [v.process(@wt_template)] }
+          nodes.zip(Array.new(nodes.size - 1) { wrap_wt(DEFAULT_SPACER) })
         when DocxSynthesizer::Variable
           variable.process(@wt_template)
         end
