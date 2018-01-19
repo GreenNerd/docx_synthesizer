@@ -1,6 +1,7 @@
 module DocxSynthesizer
   class Variable
-    NAME_REGEX = /{{\s*(?<variable_name>[\w_]+)\s*}}/
+    NAME_REGEX = /{{\s*[\w_]+\s*}}/
+    NAME_REGEX_WITH_ANCHOR = /{{\s*(?<variable_name>[\w_]+)\s*}}/
 
     attr_reader :value
 
