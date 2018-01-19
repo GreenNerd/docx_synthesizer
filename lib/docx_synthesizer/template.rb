@@ -13,6 +13,8 @@ module DocxSynthesizer
     end
 
     def render_to_file(context, output_path)
+      context = Context.new(context)
+
       Zip::File.open(@path) do |zip_file|
         buffer = Zip::OutputStream.write_buffer do |out|
           zip_file.entries.each do |e|
@@ -32,9 +34,7 @@ module DocxSynthesizer
       end
     end
 
-    def render(xml_doc, context = {})
-      context = Context.new(context)
-
+    def render(xml_doc, context)
       xml_doc.xpath(VARIABLE_NODE_PATH, custom_regex_function).each do |node|
         Fragment.new(context).render(node)
       end
