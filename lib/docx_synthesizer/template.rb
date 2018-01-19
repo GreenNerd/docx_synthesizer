@@ -6,6 +6,11 @@ module DocxSynthesizer
     # the path of the docx file
     def initialize(path)
       @path = path
+      @zip_contents = {}
+
+      Zip::File.open(@path).each do |entry|
+        @zip_contents[entry.name] = entry.get_input_stream.read
+      end
     end
 
     def inspect
@@ -17,15 +22,16 @@ module DocxSynthesizer
 
       Zip::File.open(@path) do |zip_file|
         buffer = Zip::OutputStream.write_buffer do |out|
-          zip_file.entries.each do |e|
-            out.put_next_entry(e.name)
+          @zip_contents.each do |entry_name, stream|
+            out.put_next_entry(entry_name)
 
-            if [DOCUMENT_FILE_PATH].include?(e.name)
-              xml_doc = Nokogiri::XML(e.get_input_stream.read)
+            case entry_name
+            when DOCUMENT_FILE_PATH
+              xml_doc = Nokogiri::XML(stream)
               render(xml_doc, context)
               out.write xml_doc.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
             else
-              out.write e.get_input_stream.read
+              out.write stream
             end
           end
         end
