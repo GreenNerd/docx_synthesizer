@@ -1,11 +1,10 @@
 module DocxSynthesizer
   class Environment
-    attr_reader :template, :relationships
-    attr_accessor :context
+    attr_reader :template
+    attr_accessor :context, :relationships
 
-    def initialize(template, relationships)
+    def initialize(template)
       @template = template
-      @relationships = relationships
     end
 
     def add_image(target, image_data)

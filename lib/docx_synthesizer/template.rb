@@ -6,6 +6,7 @@ module DocxSynthesizer
     CONTENT_TYPE_FILE_PATH = '[Content_Types].xml'.freeze
 
     attr_reader :zip_contents
+    attr_accessor :env
 
     # the path of the docx file
     def initialize(path)
@@ -16,7 +17,8 @@ module DocxSynthesizer
         zip_contents[entry.name] = entry.get_input_stream.read
       end
 
-      @env = Environment.new(self, Relationships.new(zip_contents[RELS_FILE_PATH]))
+      @env = Environment.new(self)
+      env.relationships = Relationships.new(zip_contents[RELS_FILE_PATH])
     end
 
     def inspect
@@ -24,29 +26,29 @@ module DocxSynthesizer
     end
 
     def render_to_file(hash, output_path)
-      compose_zip_contents(hash)
+      process_zip_contents(hash)
 
       buffer = Zip::OutputStream.write_buffer do |out|
-        zip_contents.each do |entry_name, stream|
+        zip_contents.each do |entry_name, entry_bytes|
           out.put_next_entry(entry_name)
-          out.write(stream)
+          out.write(entry_bytes)
         end
       end
 
       File.open(output_path, "wb".freeze) { |f| f.write(buffer.string) }
     end
 
-    def compose_zip_contents(hash)
+    def process_zip_contents(hash)
       context = Context.new(hash)
 
-      @env.context =  context
+      env.context =  context
 
       # render document file
       document_xml_doc = Nokogiri::XML(zip_contents[DOCUMENT_FILE_PATH])
-      zip_contents[DOCUMENT_FILE_PATH] = render_variables(document_xml_doc, @env).to_xml(indent: 0).gsub("\n".freeze, "".freeze)
+      zip_contents[DOCUMENT_FILE_PATH] = render_variables(document_xml_doc, env).to_xml(indent: 0).gsub("\n".freeze, "".freeze)
 
       # render rels file
-      zip_contents[RELS_FILE_PATH] = @env.relationships.render.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
+      zip_contents[RELS_FILE_PATH] = env.relationships.render.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
 
       # render content_type file
       xml = ContentType.render(zip_contents[CONTENT_TYPE_FILE_PATH])
