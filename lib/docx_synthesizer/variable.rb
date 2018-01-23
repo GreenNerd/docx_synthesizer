@@ -9,7 +9,7 @@ module DocxSynthesizer
       @value = value
     end
 
-    def process(node_template)
+    def process(node_template, env)
       node_template.dup.tap { |obj| obj.content = value}
     end
   end

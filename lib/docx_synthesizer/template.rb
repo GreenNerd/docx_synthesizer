@@ -2,6 +2,10 @@ module DocxSynthesizer
   class Template
     VARIABLE_NODE_PATH = %{//w:t[contains(text(), "{{")][contains(text(), "}}")][regex(., "#{Variable::NAME_REGEX.source}")]}.freeze
     DOCUMENT_FILE_PATH = 'word/document.xml'.freeze
+    RELS_FILE_PATH = 'word/_rels/document.xml.rels'.freeze
+    CONTENT_TYPE_FILE_PATH = '[Content_Types].xml'.freeze
+
+    attr_reader :zip_contents
 
     # the path of the docx file
     def initialize(path)
@@ -9,44 +13,57 @@ module DocxSynthesizer
       @zip_contents = {}
 
       Zip::File.open(@path).each do |entry|
-        @zip_contents[entry.name] = entry.get_input_stream.read
+        zip_contents[entry.name] = entry.get_input_stream.read
       end
+
+      @env = Environment.new(self, Relationships.new(zip_contents[RELS_FILE_PATH]))
     end
 
     def inspect
       "<#{self.class} path: \"#{@path}\">"
     end
 
-    def render_to_file(context, output_path)
-      context = Context.new(context)
+    def render_to_file(hash, output_path)
+      compose_zip_contents(hash)
 
-      Zip::File.open(@path) do |zip_file|
-        buffer = Zip::OutputStream.write_buffer do |out|
-          @zip_contents.each do |entry_name, stream|
-            out.put_next_entry(entry_name)
-
-            case entry_name
-            when DOCUMENT_FILE_PATH
-              xml_doc = Nokogiri::XML(stream)
-              render(xml_doc, context)
-              out.write xml_doc.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
-            else
-              out.write stream
-            end
-          end
+      buffer = Zip::OutputStream.write_buffer do |out|
+        zip_contents.each do |entry_name, stream|
+          out.put_next_entry(entry_name)
+          out.write(stream)
         end
-
-        File.open(output_path, "wb".freeze) {|f| f.write(buffer.string) }
       end
+
+      File.open(output_path, "wb".freeze) { |f| f.write(buffer.string) }
     end
 
-    def render(xml_doc, context)
-      xml_doc.xpath(VARIABLE_NODE_PATH, custom_regex_function).each do |node|
-        Fragment.new(context).render(node)
-      end
+    def compose_zip_contents(hash)
+      context = Context.new(hash)
+
+      @env.context =  context
+
+      # render document file
+      document_xml_doc = Nokogiri::XML(zip_contents[DOCUMENT_FILE_PATH])
+      zip_contents[DOCUMENT_FILE_PATH] = render_variables(document_xml_doc, @env).to_xml(indent: 0).gsub("\n".freeze, "".freeze)
+
+      # render rels file
+      zip_contents[RELS_FILE_PATH] = @env.relationships.render.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
+
+      # render content_type file
+      xml = ContentType.render(zip_contents[CONTENT_TYPE_FILE_PATH])
+      zip_contents[CONTENT_TYPE_FILE_PATH] = xml.to_xml(indent: 0).gsub("\n".freeze, "".freeze)
     end
 
     private
+
+    def render_variables(xml_doc, env)
+      fragment = Fragment.new(env)
+
+      xml_doc.xpath(VARIABLE_NODE_PATH, custom_regex_function).each do |node|
+        fragment.render(node)
+      end
+
+      xml_doc
+    end
 
     def custom_regex_function
       @custom_regex_function ||= Class.new {

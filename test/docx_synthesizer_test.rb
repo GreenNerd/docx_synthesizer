@@ -10,6 +10,7 @@ class DocxSynthesizerTest < Minitest::Test
       field_1: 1,
       field_2: 'B',
       field_3: [3, 'C'],
+      field_4: DocxSynthesizer::Variable::Image.new('image.png', url: 'https://www.baidu.com/img/bd_logo1.png', extname: 'png')
       # field_4: [
       #   DocxSynthesizer::Variable::Image.new('image.jpg', url: '~/image.jpg'),
       #   DocxSynthesizer::Variable::File.new('abc.docx', url: '~/abc.docx'),

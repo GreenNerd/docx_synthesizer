@@ -3,15 +3,17 @@ module DocxSynthesizer
     DEFAULT_SPACER = "、".freeze
     attr_reader :context
 
-    def initialize(context)
-      @context = context
+    def initialize(env)
+      @env = env
+      @context = env.context
     end
 
     def render(node)
       @wt_template = node.dup.tap { |obj| obj.content = nil }
 
       nodes = render_str(node.text)
-      node.replace(Nokogiri::XML::NodeSet.new(node.document, nodes.flatten.compact))
+      node_set = Nokogiri::XML::NodeSet.new(node.document, nodes.flatten.compact)
+      node.replace(node_set)
     end
 
     def render_str(str)
@@ -38,10 +40,10 @@ module DocxSynthesizer
       if variable = context[md[:variable_name]]
         case variable
         when Array
-          nodes = variable.map { |v| [v.process(@wt_template)] }
+          nodes = variable.map { |v| [v.process(@wt_template, @env)] }
           nodes.zip(Array.new(nodes.size - 1) { wrap_wt(DEFAULT_SPACER) })
         when DocxSynthesizer::Variable
-          variable.process(@wt_template)
+          variable.process(@wt_template, @env)
         end
       else
         wrap_wt(str)

@@ -1,17 +1,70 @@
+require 'open-uri'
+require 'securerandom'
+
 module DocxSynthesizer
   class Variable::Image < Variable
-    attr_reader :url
-
-    def initialize(value, url:)
+    def initialize(value, url:, extname:)
       super(value)
       @url = url
+      @entry_name = "media/#{SecureRandom.uuid}.#{extname}"
+
+      @cx, @cy = 72 * 2 * 12700, 72 * 2 * 12700
     end
 
-    def process(node_template)
-      super(node_template)
+    def process(node_template, env)
+      rid = env.add_image(@entry_name, fetch_image)
+      Nokogiri::XML.fragment(template % { cx: @cx, cy: @cy, rid: rid, id: rid[/\d+/], image_name: value })
+    end
+
+    private
+
+    def fetch_image
+      open(@url).read
     end
 
     def template
+      <<-TEMPLATE
+        <w:drawing>
+          <wp:inline distT="0" distB="0" distL="0" distR="0">
+            <wp:extent cx="%{cx}" cy="%{cy}" />
+            <wp:docPr id="%{id}" name="%{image_name}"/>
+            <wp:cNvGraphicFramePr>
+              <a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1" />
+            </wp:cNvGraphicFramePr>
+            <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+              <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                  <pic:nvPicPr>
+                    <pic:cNvPr id="%{id}" name="%{image_name}" />
+                    <pic:cNvPicPr />
+                  </pic:nvPicPr>
+                  <pic:blipFill>
+                    <a:blip r:embed="%{rid}">
+                      <a:extLst>
+                        <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+                          <a14:useLocalDpi xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0" />
+                        </a:ext>
+                      </a:extLst>
+                    </a:blip>
+                    <a:stretch>
+                      <a:fillRect />
+                    </a:stretch>
+                  </pic:blipFill>
+                  <pic:spPr>
+                    <a:xfrm>
+                      <a:off x="0" y="0" />
+                      <a:ext cx="%{cx}" cy="%{cy}" />
+                    </a:xfrm>
+                    <a:prstGeom prst="rect">
+                      <a:avLst />
+                    </a:prstGeom>
+                  </pic:spPr>
+                </pic:pic>
+              </a:graphicData>
+            </a:graphic>
+          </wp:inline>
+        </w:drawing>
+      TEMPLATE
     end
   end
 end
