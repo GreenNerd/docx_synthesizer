@@ -7,13 +7,16 @@ module DocxSynthesizer
       super(value)
       @url = url
       @entry_name = "media/#{SecureRandom.uuid}.#{extname}"
-
-      @cx, @cy = 72 * 2 * 12700, 72 * 2 * 12700
     end
 
-    def process(node_template, env, opts = {})
+    def process(node_template, env, filters = [], opts = {})
       rid = env.add_image(@entry_name, fetch_image)
-      Nokogiri::XML.fragment(template % { cx: @cx, cy: @cy, rid: rid, id: rid[/\d+/], image_name: value })
+      filter = Variable::Image.avaiable_filters(filters).last || Filter::Dimension.new
+      Nokogiri::XML.fragment(template % { cx: filter.width, cy: filter.height, rid: rid, id: rid[/\d+/], image_name: value })
+    end
+
+    def self.allowed_filter_types
+      @allowed_filter_types ||= Filter.filters.values_at(:dimension)
     end
 
     private

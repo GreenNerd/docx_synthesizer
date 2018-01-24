@@ -10,10 +10,10 @@ module DocxSynthesizer
       value.each
     end
 
-    def process(node_template, env, opts = {})
+    def process(node_template, env, filters = [], opts = {})
       spacer = opts.fetch(:spacer) { @spacer }
 
-      nodes = value.map { |v| [v.process(node_template, env)] }
+      nodes = value.map { |v| [v.process(node_template, env, filters, opts)] }
 
       if spacer
         spacer_variable = Variable::Text.new(spacer)

@@ -38,7 +38,9 @@ module DocxSynthesizer
       md = str.match(Variable::NAME_REGEX_WITH_CAPTURES)
 
       if variable = context[md[:variable_name]]
-        variable.process(@wt_template, @env)
+        filters = Filter.parse(md[:filter_markup])
+
+        variable.process(@wt_template, @env, filters)
       else
         wrap_wt(str)
       end
