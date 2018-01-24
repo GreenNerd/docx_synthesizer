@@ -7,8 +7,8 @@ require 'docx_synthesizer/context'
 require 'docx_synthesizer/variable'
 require 'docx_synthesizer/environment'
 require 'docx_synthesizer/relationships'
-require 'docx_synthesizer/content_type'
 require 'docx_synthesizer/fragment'
+require 'docx_synthesizer/processors'
 require 'docx_synthesizer/template'
 
 module DocxSynthesizer
