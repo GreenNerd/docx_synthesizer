@@ -1,6 +1,6 @@
 module DocxSynthesizer
   class Variable::Array < Variable
-    def initialize(value, spacer: nil)
+    def initialize(value, spacer: ' '.freeze)
       value = [value] unless ::Array === value
       super(value)
       @spacer = spacer
@@ -16,14 +16,14 @@ module DocxSynthesizer
       nodes = value.map { |v| [v.process(node_template, env)] }
 
       if spacer
-        nodes
-      else
         spacer_variable = Variable::Text.new(spacer)
         nodes.zip(
           ::Array.new(nodes.size - 1) {
             spacer_variable.process(node_template, env)
           }
         )
+      else
+        nodes
       end
     end
   end
