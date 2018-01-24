@@ -26,7 +26,7 @@ module DocxSynthesizer
       when Hash
         deep_transform(value)
       when Array
-        value.map { |v| transform_value(v) }
+        DocxSynthesizer::Variable::Array.new(value.map { |v| transform_value(v) })
       when DocxSynthesizer::Variable
         value
       else

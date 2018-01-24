@@ -38,13 +38,7 @@ module DocxSynthesizer
       md = str.match(Variable::NAME_REGEX_WITH_CAPTURES)
 
       if variable = context[md[:variable_name]]
-        case variable
-        when Array
-          nodes = variable.map { |v| [v.process(@wt_template, @env)] }
-          nodes.zip(Array.new(nodes.size - 1) { wrap_wt(DEFAULT_SPACER) })
-        when DocxSynthesizer::Variable
-          variable.process(@wt_template, @env)
-        end
+        variable.process(@wt_template, @env)
       else
         wrap_wt(str)
       end

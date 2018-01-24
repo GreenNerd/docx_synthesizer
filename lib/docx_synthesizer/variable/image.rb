@@ -11,7 +11,7 @@ module DocxSynthesizer
       @cx, @cy = 72 * 2 * 12700, 72 * 2 * 12700
     end
 
-    def process(node_template, env)
+    def process(node_template, env, opts = {})
       rid = env.add_image(@entry_name, fetch_image)
       Nokogiri::XML.fragment(template % { cx: @cx, cy: @cy, rid: rid, id: rid[/\d+/], image_name: value })
     end

@@ -9,8 +9,8 @@ module DocxSynthesizer
       @value = value
     end
 
-    def process(node_template, env)
-      node_template.dup.tap { |obj| obj.content = value}
+    def process(node_template, env, opts = {})
+      node_template.dup.tap { |obj| obj.content = value }
     end
   end
 end
@@ -18,3 +18,4 @@ end
 require 'docx_synthesizer/variable/text'
 require 'docx_synthesizer/variable/file'
 require 'docx_synthesizer/variable/image'
+require 'docx_synthesizer/variable/array'
