@@ -11,6 +11,11 @@ module DocxSynthesizer
       @data = deep_transform(context)
     end
 
+    def lookup(variable_name)
+
+      @data.dig(*Helper.compact_and_strip(variable_name.split('.')))
+    end
+
     private
 
     def deep_transform(hash)

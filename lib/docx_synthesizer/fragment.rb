@@ -67,7 +67,7 @@ module DocxSynthesizer
     def evaluate(str)
       md = str.match(Variable::NAME_REGEX_WITH_CAPTURES)
 
-      if variable = context[md[:variable_name]]
+      if variable = context.lookup(md[:variable_name])
         filters = Filter.parse(md[:filter_markup])
 
         variable.process(@wt_template, @env, filters)

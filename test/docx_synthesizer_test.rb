@@ -7,6 +7,9 @@ class DocxSynthesizerTest < Minitest::Test
 
   def test_render
     context = {
+      user: {
+        name: 'Phil Chen'
+      },
       field_1: 1,
       field_2: 'B',
       field_3: [3, 'C'],
