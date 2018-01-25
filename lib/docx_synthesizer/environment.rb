@@ -14,6 +14,10 @@ module DocxSynthesizer
       rid
     end
 
+    def add_hyperlink(target)
+      @relationships.add_hyperlink(target)
+    end
+
     def write_media(out)
       @media.each do |entry_name, media_data|
         out.put_next_entry(entry_name)

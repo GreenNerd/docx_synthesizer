@@ -1,6 +1,6 @@
 module DocxSynthesizer
   class Fragment
-    DEFAULT_SPACER = "、".freeze
+    DEFAULT_SPACER = "、"
     attr_reader :context
 
     def initialize(env)
@@ -11,9 +11,39 @@ module DocxSynthesizer
     def render(node)
       @wt_template = node.dup.tap { |obj| obj.content = nil }
 
-      nodes = render_str(node.text)
-      node_set = Nokogiri::XML::NodeSet.new(node.document, nodes.flatten.compact)
-      node.replace(node_set)
+      wr_node = node.parent
+
+      wr_template = node.parent.dup(0)
+
+      if wrpr_node = node.parent.xpath('w:rPr').first
+        wr_template.add_child(wrpr_node.dup)
+      end
+
+      current_node = wr_node
+
+      render_str(node.text).flatten.each do |new_node|
+        next unless new_node
+
+        case new_node.name
+        when 'hyperlink'
+          if wrpr_node
+            new_node.xpath('w:r/w:rPr').first.replace(wrpr_node.dup)
+          end
+
+          next_sibling = new_node
+        when 'r'
+          next_sibling = new_node
+        else
+          new_node['xml:space'] = 'preserve'
+          next_sibling = wr_template.dup
+          next_sibling.add_child(new_node)
+        end
+
+        current_node.add_next_sibling(next_sibling)
+        current_node = next_sibling
+      end
+
+      wr_node.remove
     end
 
     def render_str(str)

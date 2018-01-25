@@ -6,6 +6,7 @@ module DocxSynthesizer
     MAIN_NS_URI = "#{BASE_URL}/drawingml/#{YEAR}/main".freeze
     RELATIONSHIPS_NS_URI = "#{BASE_URL}/package/#{YEAR}/relationships".freeze
     IMAGE_TYPE = "#{BASE_URL}/officeDocument/#{YEAR}/relationships/image".freeze
+    HYPERLINK_TYPE = "#{BASE_URL}/officeDocument/#{YEAR}/relationships/hyperlink".freeze
 
     attr_accessor :new_rels
 
@@ -21,6 +22,19 @@ module DocxSynthesizer
         'Id' => rid,
         'Type' => IMAGE_TYPE,
         'Target' => target
+      )
+
+      rid
+    end
+
+    def add_hyperlink(target)
+      rid = "rId#{next_rid}"
+
+      new_rels.push(
+        'Id' => rid,
+        'Type' => HYPERLINK_TYPE,
+        'Target' => target,
+        'TargetMode' => "External"
       )
 
       rid
