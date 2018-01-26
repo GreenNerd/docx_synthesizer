@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'securerandom'
+require 'fastimage'
 
 module DocxSynthesizer
   class Variable::Image < Variable
@@ -9,10 +10,19 @@ module DocxSynthesizer
       super(value)
       @url = url
       @entry_name = "media/#{SecureRandom.uuid}.#{extname}"
-      @image_data = fetch_image
+
+      @loaded = false
+
+      @file_fiber = Fiber.new do
+        open(@url) do |f|
+          Fiber.yield f
+        end
+      end
     end
 
     def process(node_template, env, filters = [], opts = {})
+      fetch_image unless @loaded
+
       rid = env.add_image(@entry_name, @image_data)
       dimension_filter , background_size_filter = get_filters(filters)
 
@@ -39,8 +49,11 @@ module DocxSynthesizer
     private
 
     def fetch_image
-      @original_dimension = [48, 48]
-      open(@url).read
+      stream = @file_fiber.resume
+      @original_dimension = FastImage.size(stream)
+      @image_data = stream.read
+
+      @loaded = true
     end
 
     def get_filters(filters)
