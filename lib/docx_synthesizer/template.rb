@@ -8,17 +8,19 @@ module DocxSynthesizer
     attr_accessor :env
 
     # the path of the docx file
-    def initialize(path)
-      @path = path
+    def initialize(path_or_buffer)
       @zip_contents = {}
 
-      Zip::File.open(@path).each do |entry|
+      stream =
+        begin
+          Zip::File.open(path_or_buffer)
+        rescue ArgumentError
+          Zip::File.open_buffer(path_or_buffer)
+        end
+
+      stream.each do |entry|
         zip_contents[entry.name] = entry.get_input_stream.read
       end
-    end
-
-    def inspect
-      "<#{self.class} path: \"#{@path}\">"
     end
 
     def render_to_string(hash)
