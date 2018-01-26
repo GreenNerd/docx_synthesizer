@@ -3,6 +3,7 @@ require 'zip'
 
 require 'docx_synthesizer/version'
 
+require 'docx_synthesizer/configuration'
 require 'docx_synthesizer/helper'
 
 require 'docx_synthesizer/context'
@@ -17,5 +18,13 @@ require 'docx_synthesizer/template'
 module DocxSynthesizer
   def self.template(path)
     Template.new(path)
+  end
+
+  def self.configuration
+    if block_given?
+      yield Configuration.instance
+    else
+      Configuration.instance
+    end
   end
 end
