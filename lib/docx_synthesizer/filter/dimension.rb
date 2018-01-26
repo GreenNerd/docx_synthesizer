@@ -10,6 +10,10 @@ module DocxSynthesizer
       parse_options(str.to_s)
     end
 
+    def dimension
+      [width, height]
+    end
+
     private
 
     def parse_options(str)

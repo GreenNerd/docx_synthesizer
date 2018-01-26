@@ -15,8 +15,6 @@ require 'docx_synthesizer/processors'
 require 'docx_synthesizer/template'
 
 module DocxSynthesizer
-  include Helper
-
   def self.template(path)
     Template.new(path)
   end

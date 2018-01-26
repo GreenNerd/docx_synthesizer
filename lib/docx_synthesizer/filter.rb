@@ -32,3 +32,4 @@ module DocxSynthesizer
 end
 
 require 'docx_synthesizer/filter/dimension'
+require 'docx_synthesizer/filter/background_size'

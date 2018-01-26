@@ -20,7 +20,7 @@ class DocxSynthesizerTest < Minitest::Test
         4,
         'D'
       ],
-      # field_5: DocxSynthesizer::Variable::Image.new('image.jpg', url: '~/image.jpg'),
+      field_5: DocxSynthesizer::Variable::Image.new('douban-reading.jpg', url: 'https://img3.doubanio.com/icon/u113894409-4.jpg', extname: 'jpg'),
       # field_6: DocxSynthesizer::Variable::File.new('abc.docx', url: '~/abc.docx')
     }
 
