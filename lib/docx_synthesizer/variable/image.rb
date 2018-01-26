@@ -6,10 +6,9 @@ module DocxSynthesizer
   class Variable::Image < Variable
     attr_accessor :original_dimension
 
-    def initialize(value, url:, extname:)
+    def initialize(value, url:)
       super(value)
       @url = url
-      @entry_name = "media/#{SecureRandom.uuid}.#{extname}"
 
       @loaded = false
     end
@@ -45,8 +44,10 @@ module DocxSynthesizer
     def fetch_image
       stream = ImageFetcher.new(@url).fetch
 
-      @original_dimension = FastImage.size(stream)
+      fast_image = FastImage.new(stream)
+      @original_dimension = fast_image.size
       @image_data = stream.read
+      @entry_name = "media/#{SecureRandom.uuid}.#{fast_image.type}"
 
       @loaded = true
     end

@@ -13,15 +13,15 @@ class DocxSynthesizerTest < Minitest::Test
       field_1: 1,
       field_2: 'B',
       field_3: [3, 'C'],
-      # field_4: DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg', extname: 'jpg')
+      # field_4: DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg')
       field_4: [
-        DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg', extname: 'jpg'),
+        DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg'),
         DocxSynthesizer::Variable::File.new('Skylark', url: 'https://skylarkly.com'),
         4,
         'D'
       ],
-      field_5: DocxSynthesizer::Variable::Image.new('douban-reading.jpg', url: 'https://img3.doubanio.com/icon/u113894409-4.jpg', extname: 'jpg'),
-      field_6: DocxSynthesizer::Variable::Image.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png', extname: 'png'),
+      field_5: DocxSynthesizer::Variable::Image.new('douban-reading.jpg', url: 'https://img3.doubanio.com/icon/u113894409-4.jpg'),
+      field_6: DocxSynthesizer::Variable::Image.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
     }
 
     template = DocxSynthesizer.template(File.expand_path("../template.docx", __FILE__))
