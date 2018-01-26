@@ -21,7 +21,7 @@ module DocxSynthesizer
       "<#{self.class} path: \"#{@path}\">"
     end
 
-    def render_to_file(hash, output_path)
+    def render_to_string(hash)
       @env = Environment.new
 
       env.relationships = Relationships.new(zip_contents[RELS_FILE_PATH])
@@ -41,7 +41,11 @@ module DocxSynthesizer
         env.write_media(out)
       end
 
-      File.open(output_path, "wb".freeze) { |f| f.write(buffer.string) }
+      buffer.string
+    end
+
+    def render_to_file(hash, output_path)
+      File.open(output_path, "wb".freeze) { |f| f.write(render_to_string(hash)) }
     end
 
     class << self
