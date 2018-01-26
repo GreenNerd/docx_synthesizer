@@ -5,6 +5,7 @@ require 'docx_synthesizer/version'
 
 require 'docx_synthesizer/configuration'
 require 'docx_synthesizer/helper'
+require 'docx_synthesizer/image_fetcher'
 
 require 'docx_synthesizer/context'
 require 'docx_synthesizer/variable'
@@ -16,6 +17,9 @@ require 'docx_synthesizer/processors'
 require 'docx_synthesizer/template'
 
 module DocxSynthesizer
+  class ImageFetchFailure < StandardError # :nodoc:
+  end
+
   def self.template(path)
     Template.new(path)
   end

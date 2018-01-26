@@ -12,12 +12,6 @@ module DocxSynthesizer
       @entry_name = "media/#{SecureRandom.uuid}.#{extname}"
 
       @loaded = false
-
-      @file_fiber = Fiber.new do
-        open(@url) do |f|
-          Fiber.yield f
-        end
-      end
     end
 
     def process(node_template, env, filters = [], opts = {})
@@ -49,7 +43,8 @@ module DocxSynthesizer
     private
 
     def fetch_image
-      stream = @file_fiber.resume
+      stream = ImageFetcher.new(@url).fetch
+
       @original_dimension = FastImage.size(stream)
       @image_data = stream.read
 
