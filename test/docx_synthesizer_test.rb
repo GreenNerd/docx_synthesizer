@@ -22,6 +22,11 @@ class DocxSynthesizerTest < Minitest::Test
       ],
       field_5: DocxSynthesizer::Variable::Image.new('douban-reading.jpg', url: 'https://img3.doubanio.com/icon/u113894409-4.jpg'),
       field_6: DocxSynthesizer::Variable::Image.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
+      field_7: [
+        DocxSynthesizer::Variable::Hyperlink.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
+        DocxSynthesizer::Variable::Hyperlink.new('下载失败', url: 'https://img3.doubanio.com/not-found.png'),
+        'Hyperlink'
+      ]
     }
 
     template = DocxSynthesizer.template(File.expand_path("../template.docx", __FILE__))
@@ -45,6 +50,11 @@ class DocxSynthesizerTest < Minitest::Test
       ],
       field_5: DocxSynthesizer::Variable::Image.new('douban-reading.jpg', url: 'https://img3.doubanio.com/icon/u113894409-4.jpg'),
       field_6: DocxSynthesizer::Variable::Image.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
+      field_7: [
+        DocxSynthesizer::Variable::Hyperlink.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
+        DocxSynthesizer::Variable::Hyperlink.new('下载失败', url: 'https://img3.doubanio.com/not-found.png'),
+        'Hyperlink'
+      ]
     }
 
     template = DocxSynthesizer.template(File.read(File.expand_path("../template.docx", __FILE__)))
