@@ -16,7 +16,7 @@ class DocxSynthesizerTest < Minitest::Test
       # field_4: DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg')
       field_4: [
         DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg'),
-        DocxSynthesizer::Variable::File.new('Skylark', url: 'https://skylarkly.com'),
+        DocxSynthesizer::Variable::Hyperlink.new('Skylark', url: 'https://skylarkly.com'),
         4,
         'D'
       ],
@@ -39,7 +39,7 @@ class DocxSynthesizerTest < Minitest::Test
       # field_4: DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg')
       field_4: [
         DocxSynthesizer::Variable::Image.new('看不见的客人.jpg', url: 'https://img1.doubanio.com/view/activity_page/raw/public/p2638.jpg'),
-        DocxSynthesizer::Variable::File.new('Skylark', url: 'https://skylarkly.com'),
+        DocxSynthesizer::Variable::Hyperlink.new('Skylark', url: 'https://skylarkly.com'),
         4,
         'D'
       ],

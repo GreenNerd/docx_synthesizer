@@ -30,6 +30,6 @@ module DocxSynthesizer
 end
 
 require 'docx_synthesizer/variable/text'
-require 'docx_synthesizer/variable/file'
+require 'docx_synthesizer/variable/hyperlink'
 require 'docx_synthesizer/variable/image'
 require 'docx_synthesizer/variable/array'

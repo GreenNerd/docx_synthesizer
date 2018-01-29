@@ -1,5 +1,5 @@
 module DocxSynthesizer
-  class Variable::File < Variable
+  class Variable::Hyperlink < Variable
     def initialize(value, url:)
       super(value)
       @url = url
