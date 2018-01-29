@@ -18,8 +18,12 @@ module DocxSynthesizer
           Zip::File.open_buffer(path_or_buffer)
         end
 
-      stream.each do |entry|
-        zip_contents[entry.name] = entry.get_input_stream.read
+      begin
+        stream.each do |entry|
+          zip_contents[entry.name] = entry.get_input_stream.read
+        end
+      rescue
+        raise InvalidTemplateError
       end
     end
 

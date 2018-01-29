@@ -20,6 +20,9 @@ module DocxSynthesizer
   class ImageFetchFailure < StandardError # :nodoc:
   end
 
+  class InvalidTemplateError< StandardError # :nodoc:
+  end
+
   def self.template(path)
     Template.new(path)
   end

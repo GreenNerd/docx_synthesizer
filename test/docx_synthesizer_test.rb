@@ -36,4 +36,10 @@ class DocxSynthesizerTest < Minitest::Test
     template = DocxSynthesizer.template(File.read(File.expand_path("../template.docx", __FILE__)))
     template.render_to_file(@context, File.expand_path("../generated_from_buffer.docx", __FILE__))
   end
+
+  def test_raise_invalid_template_error
+    assert_raises DocxSynthesizer::InvalidTemplateError do
+      DocxSynthesizer.template(File.read(File.expand_path("../invalid-template.docx", __FILE__)))
+    end
+  end
 end
