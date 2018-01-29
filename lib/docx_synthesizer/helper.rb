@@ -7,5 +7,12 @@ module DocxSynthesizer
       array.map(&:strip!)
       array
     end
+
+    def safe(text)
+      text.to_s
+        .gsub('&', '&amp;')
+        .gsub('>', '&gt;')
+        .gsub('<', '&lt;')
+    end
   end
 end
