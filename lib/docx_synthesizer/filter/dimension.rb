@@ -1,7 +1,5 @@
 module DocxSynthesizer
   class Filter::Dimension < Filter
-    DEFAULT_WIDTH    = 2
-    DEFAULT_HEIGHT   = 2
     DIMENSION_FACTOR = 72 * 12700
 
     attr_accessor :width, :height
@@ -19,8 +17,8 @@ module DocxSynthesizer
     def parse_options(str)
       width, height = str.split('x'.freeze)
 
-      @width  = (nonzero(width.to_f, DEFAULT_WIDTH)   * DIMENSION_FACTOR).to_i
-      @height = (nonzero(height.to_f, DEFAULT_HEIGHT) * DIMENSION_FACTOR).to_i
+      @width  = (nonzero(width.to_f, Configuration.dimension_options.width)   * DIMENSION_FACTOR).to_i
+      @height = (nonzero(height.to_f, Configuration.dimension_options.height) * DIMENSION_FACTOR).to_i
     end
 
     def nonzero(float_number, default)

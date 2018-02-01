@@ -11,13 +11,23 @@ module DocxSynthesizer
       http_header: {}
     }
 
+    DefaultDimensionOptions = {
+      width: 2,
+      height: 2
+    }
+
     attr_reader :fetch_options
 
     def initialize
       @fetch_options = DefaultFetchOptions.dup
+      @dimension_options = DefaultDimensionOptions.dup
     end
 
     def fetch_options=(options)
+      @fetch_options = DefaultFetchOptions.merge(options)
+    end
+
+    def dimension_options=(options)
       @fetch_options = DefaultFetchOptions.merge(options)
     end
   end
