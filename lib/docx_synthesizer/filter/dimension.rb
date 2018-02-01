@@ -17,8 +17,8 @@ module DocxSynthesizer
     def parse_options(str)
       width, height = str.split('x'.freeze)
 
-      @width  = (nonzero(width.to_f, Configuration.dimension_options.width)   * DIMENSION_FACTOR).to_i
-      @height = (nonzero(height.to_f, Configuration.dimension_options.height) * DIMENSION_FACTOR).to_i
+      @width  = (nonzero(width.to_f, DocxSynthesizer.configuration.dimension_options.width)   * DIMENSION_FACTOR).to_i
+      @height = (nonzero(height.to_f, DocxSynthesizer.configuration.dimension_options.height) * DIMENSION_FACTOR).to_i
     end
 
     def nonzero(float_number, default)
