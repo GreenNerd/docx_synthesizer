@@ -20,7 +20,7 @@ module DocxSynthesizer
       default: 'contain'
     }
 
-    attr_reader :fetch_options
+    attr_reader :fetch_options, :dimension_options, :background_size_options
 
     def initialize
       @fetch_options = DefaultFetchOptions.dup
