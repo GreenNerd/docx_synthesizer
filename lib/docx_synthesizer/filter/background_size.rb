@@ -8,7 +8,7 @@ module DocxSynthesizer
         if KEYWORDS.include?(str)
           str
         else
-          KEYWORDS.first
+          Configuration.background_size_options.default
         end
     end
 
