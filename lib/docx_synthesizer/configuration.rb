@@ -20,12 +20,13 @@ module DocxSynthesizer
       default: 'contain'
     }
 
-    attr_reader :fetch_options, :dimension_options, :background_size_options
+    attr_reader :fetch_options, :dimension_options, :background_size_options, :threads_on
 
     def initialize
       @fetch_options = DefaultFetchOptions.dup
       @dimension_options = DefaultDimensionOptions.dup
       @background_size = DefaultBackgroundSizeOptions.dup
+      @threads_on = true
     end
 
     def fetch_options=(options)
@@ -38,6 +39,10 @@ module DocxSynthesizer
 
     def background_size_options=(options)
       @background_size_options = DefaultBackgroundSizeOptions.merge(options)
+    end
+
+    def threads_on=(boolean)
+      @threads_on = boolean
     end
   end
 end

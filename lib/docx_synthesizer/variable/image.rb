@@ -39,8 +39,6 @@ module DocxSynthesizer
       @allowed_filter_types ||= Filter.filters.values_at(:dimension, :background_size)
     end
 
-    private
-
     def fetch_image
       stream = ImageFetcher.new(@url).fetch
 
@@ -51,6 +49,8 @@ module DocxSynthesizer
 
       @loaded = true
     end
+
+    private
 
     def get_filters(filters)
       filters = Variable::Image.avaiable_filters(filters)
