@@ -15,7 +15,7 @@ module DocxSynthesizer
 
     def lookup(variable_name)
 
-      @data.dig(*Helper.compact_and_strip(variable_name.split('.')))
+      @data.dig(*Util::Helper.compact_and_strip(variable_name.split('.')))
     end
 
     private

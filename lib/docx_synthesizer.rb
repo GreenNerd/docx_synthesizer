@@ -4,8 +4,8 @@ require 'zip'
 require 'docx_synthesizer/version'
 
 require 'docx_synthesizer/configuration'
-require 'docx_synthesizer/helper'
-require 'docx_synthesizer/image_fetcher'
+require 'docx_synthesizer/util/helper'
+require 'docx_synthesizer/util/image_fetcher'
 
 require 'docx_synthesizer/context'
 require 'docx_synthesizer/variable'

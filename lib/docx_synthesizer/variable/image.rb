@@ -40,7 +40,7 @@ module DocxSynthesizer
     end
 
     def fetch_image
-      stream = ImageFetcher.new(@url).fetch
+      stream = Util::ImageFetcher.new(@url).fetch
 
       fast_image = FastImage.new(stream)
       @original_dimension = fast_image.size

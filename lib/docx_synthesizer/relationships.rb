@@ -33,7 +33,7 @@ module DocxSynthesizer
       new_rels.push(
         'Id' => rid,
         'Type' => HYPERLINK_TYPE,
-        'Target' => Helper.safe(target),
+        'Target' => Util::Helper.safe(target),
         'TargetMode' => "External"
       )
 
