@@ -23,10 +23,24 @@ module DocxSynthesizer
   class InvalidTemplateError< StandardError # :nodoc:
   end
 
+  # @param path [String, IO]
   def self.template(path)
     Template.new(path)
   end
 
+  ##
+  # Get the configuration or set configuration
+  #
+  # @return [Configuration]
+  #
+  # Example:
+  #  DocxSynthesizer.configuration do |config|
+  #    config.fetch_options = {
+  #      read_timeout: 5,
+  #      open_timeout: 6,
+  #      http_header: {}
+  #    }
+  #  end
   def self.configuration
     if block_given?
       yield Configuration.instance

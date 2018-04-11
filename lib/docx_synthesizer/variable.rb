@@ -6,6 +6,7 @@ module DocxSynthesizer
     FilterArgumentSeparator = /:/
     NAME_REGEX = /{{\s*#{NAME_FRAGEMENT}\s*(#{FILTER_FRAGEMENT})*\s*}}/
     NAME_REGEX_WITH_CAPTURES = /{{\s*(?<variable_name>#{NAME_FRAGEMENT})\s*(?<filter_markup>#{FILTER_FRAGEMENT}*)\s*}}/
+    # {{ name | dimension:4x4 | background_size:cover }}
 
     attr_reader :value
 
