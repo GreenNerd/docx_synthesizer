@@ -22,7 +22,7 @@ class DocxSynthesizerTest < Minitest::Test
         DocxSynthesizer::Variable::Hyperlink.new('Escape Link', url: 'https://skylarkly.com?id=1&name=2&age>1&age<2'),
         DocxSynthesizer::Variable::Hyperlink.new('cant-load.png', url: 'https://img3.doubanio.com/not-found.png'),
         DocxSynthesizer::Variable::Hyperlink.new('下载失败', url: 'https://img3.doubanio.com/not-found.png'),
-        'Hyperlink'
+        DocxSynthesizer::Variable::Hyperlink.new('Skylark', url: 'https://skylarkly.com')
       ]
     }
   end

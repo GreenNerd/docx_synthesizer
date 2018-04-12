@@ -21,38 +21,22 @@ module DocxSynthesizer
 
       current_node = wr_node
 
-      render_str(node.text).flatten.each do |new_node|
-        next unless new_node
+      render_presenter(node.text).flatten.each do |node_presenter|
+        next unless node_presenter
 
-        case new_node.name
-        when 'hyperlink'
-          if wrpr_node
-            new_node.xpath('w:r/w:rPr').first.replace(wrpr_node.dup)
-          end
-
-          next_sibling = new_node
-        when 'r'
-          next_sibling = new_node
-        else
-          new_node['xml:space'] = 'preserve'
-          next_sibling = wr_template.dup
-          next_sibling.add_child(new_node)
-        end
-
-        current_node.add_next_sibling(next_sibling)
-        current_node = next_sibling
+        current_node = node_presenter.present(current_node, @wt_template, @env, wrpr_node: wrpr_node, wr_template: wr_template)
       end
 
       wr_node.remove
     end
 
-    def render_str(str)
+    def render_presenter(str)
       head, match, tail = str.partition(Variable::NAME_REGEX)
 
       if match.empty?
         [wrap_wt(str)]
       else
-        [wrap_wt(head), evaluate(match), render_str(tail)]
+        [wrap_wt(head), evaluate(match), render_presenter(tail)]
       end
     end
 
@@ -61,16 +45,14 @@ module DocxSynthesizer
     def wrap_wt(text)
       return if text.empty?
 
-      @wt_template.dup.tap { |obj| obj.content = text }
+      DocxSynthesizer::Variable::Text.new(text).stash
     end
 
     def evaluate(str)
       md = str.match(Variable::NAME_REGEX_WITH_CAPTURES)
 
       if variable = context.lookup(md[:variable_name])
-        filters = Filter.parse(md[:filter_markup])
-
-        variable.process(@wt_template, @env, filters)
+        variable.stash(Filter.parse(md[:filter_markup]))
       else
         wrap_wt(str)
       end

@@ -8,10 +8,23 @@ module DocxSynthesizer
     NAME_REGEX_WITH_CAPTURES = /{{\s*(?<variable_name>#{NAME_FRAGEMENT})\s*(?<filter_markup>#{FILTER_FRAGEMENT}*)\s*}}/
     # {{ name | dimension:4x4 | background_size:cover }}
 
+    Presenter = Struct.new(:variable, :filters) do
+      def present(current_node, node_template, env, options = {})
+        new_node = variable.process(node_template, env, filters)
+
+        current_node.add_next_sibling(new_node)
+        new_node
+      end
+    end
+
     attr_reader :value
 
     def initialize(value)
       @value = value
+    end
+
+    def stash(filters = [])
+      self.class::Presenter.new(self, filters)
     end
 
     def process(node_template, env, filters = [], opts = {})

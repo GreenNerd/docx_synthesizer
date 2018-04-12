@@ -6,8 +6,10 @@ module DocxSynthesizer
       @spacer = spacer
     end
 
-    def each
-      value.each
+    def stash(filters = [])
+      value.map do |variable|
+        variable.stash(filters)
+      end
     end
 
     def process(node_template, env, filters = [], opts = {})
