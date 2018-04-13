@@ -41,3 +41,4 @@ end
 require 'docx_synthesizer/processor/document'
 require 'docx_synthesizer/processor/content_types'
 require 'docx_synthesizer/processor/relationships'
+require 'docx_synthesizer/processor/styles'

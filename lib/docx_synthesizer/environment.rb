@@ -1,6 +1,6 @@
 module DocxSynthesizer
   class Environment
-    attr_accessor :context, :relationships
+    attr_accessor :context, :relationships, :styles
 
     def initialize
       @media = {}
@@ -16,6 +16,10 @@ module DocxSynthesizer
 
     def add_hyperlink(target)
       @relationships.add_hyperlink(target)
+    end
+
+    def add_style(style_node)
+      @styles.add_style(style_node)
     end
 
     def write_media(out)

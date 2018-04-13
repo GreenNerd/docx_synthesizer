@@ -1,8 +1,9 @@
 module DocxSynthesizer
   class Template
-    DOCUMENT_FILE_PATH = 'word/document.xml'.freeze
-    RELS_FILE_PATH = 'word/_rels/document.xml.rels'.freeze
+    DOCUMENT_FILE_PATH     = 'word/document.xml'.freeze
+    RELS_FILE_PATH         = 'word/_rels/document.xml.rels'.freeze
     CONTENT_TYPE_FILE_PATH = '[Content_Types].xml'.freeze
+    STYLES_FILE_PATH       = 'word/styles.xml'.freeze
 
     attr_reader :zip_contents
     attr_accessor :env
@@ -31,7 +32,8 @@ module DocxSynthesizer
       @env = Environment.new
 
       env.relationships = Relationships.new(zip_contents[RELS_FILE_PATH])
-      env.context = Context.new(hash)
+      env.styles        = Styles.new(zip_contents[STYLES_FILE_PATH])
+      env.context       = Context.new(hash)
 
       processors = Processors.new(Template.processors)
 
@@ -64,8 +66,9 @@ module DocxSynthesizer
       end
     end
 
-    register_processor(DOCUMENT_FILE_PATH, Processor::Document)
-    register_processor(RELS_FILE_PATH, Processor::Relationships)
+    register_processor(DOCUMENT_FILE_PATH,     Processor::Document)
+    register_processor(RELS_FILE_PATH,         Processor::Relationships)
     register_processor(CONTENT_TYPE_FILE_PATH, Processor::ContentTypes)
+    register_processor(STYLES_FILE_PATH,       Processor::Styles)
   end
 end
