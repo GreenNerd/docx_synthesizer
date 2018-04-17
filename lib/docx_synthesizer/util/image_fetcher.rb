@@ -8,14 +8,14 @@ module DocxSynthesizer
       def fetch
         begin
           @parsed_uri = URI.parse(@uri)
-        rescue URI::InvalidURIError
-          fetch_using_file_open
-        else
+
           if @parsed_uri.scheme == 'http' || @parsed_uri.scheme == 'https'
             fetch_using_http
           else
             fetch_using_file_open
           end
+        rescue URI::InvalidURIError
+          fetch_using_file_open
         end
       rescue Timeout::Error, SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ECONNRESET, ImageFetchFailure, Net::HTTPBadResponse, EOFError, Errno::ENOENT
         open_broken_image
@@ -24,7 +24,11 @@ module DocxSynthesizer
       private
 
       def fetch_using_file_open
-        File.open(@uri)
+        if @uri.start_with?('data:'.freeze)
+          StringIO.new(Base64.decode64(@uri.split(','.freeze)[1]))
+        else
+          File.open(@uri)
+        end
       end
 
       def open_broken_image
