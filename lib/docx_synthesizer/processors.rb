@@ -21,7 +21,7 @@ module DocxSynthesizer
     def process(out, env)
       @processors.each do |entry_name, entry_processor|
         entry_bytes = @processors[entry_name].to_be_processed
-        next if entry_bytes.empty?
+        next if entry_bytes.to_s.empty?
 
         xml_doc = Nokogiri::XML(entry_bytes)
         entry_processor.processors.each { |processor| processor.process(xml_doc, env) }
