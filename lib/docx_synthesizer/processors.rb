@@ -21,7 +21,8 @@ module DocxSynthesizer
     def process(out, env)
       @processors.each do |entry_name, entry_processor|
         entry_bytes = @processors[entry_name].to_be_processed
-        next if entry_bytes.to_s.empty?
+        raise DocxSynthesizer::InvalidTemplateError.new('模板解析失败') if entry_bytes.nil?
+        next if entry_bytes.empty?
 
         xml_doc = Nokogiri::XML(entry_bytes)
         entry_processor.processors.each { |processor| processor.process(xml_doc, env) }
